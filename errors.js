@@ -16,5 +16,9 @@ module.exports = {
     NO_QUERY: function () {
         const error = ':no_entry_sign: Please enter a song url or query to search.'
         return { embeds: [getFailureEmbed(error)] }
+    },
+    EMPTY_QUEUE: function () {
+        const error = ':no_entry_sign: There is nothing in the queue right now.'
+        return { embeds: [getFailureEmbed(error)] }
     }
 }
