@@ -72,24 +72,6 @@ function getErrorEmbed(title, message) {
     return embed
 }
 
-// TODO: add pagination
-function getQueueEmbed(songs) {
-    let embed = new EmbedBuilder()
-        .setColor(colors.actionStatus)
-        .setTitle('Music Queue')
-        .setDescription(`**Now Playing:** ${songs[0].name} - \`${songs[0].formattedDuration}\``)
-    if (songs.length > 1) {
-        embed.addFields({
-            name: ' ',
-            value: `${songs
-                .slice(1)
-                .map((song, i) => `${i + 1}. ${song.name} - \`${song.formattedDuration}\``)
-                .join('\n')}`
-        })
-    }
-    return embed
-}
-
 function getQueuedSongEmbed(song) {
     let embed = new EmbedBuilder()
         .setColor(colors.actionSuccess)
@@ -146,7 +128,6 @@ function validateHhMmSs(string) {
 module.exports = {
     getPlayEmbed: getPlayEmbed,
     getFailureEmbed: getFailureEmbed,
-    getQueueEmbed: getQueueEmbed,
     getVolumeFormat: getVolumeFormat,
     getSuccessEmbed: getSuccessEmbed,
     getErrorEmbed: getErrorEmbed,
