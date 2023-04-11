@@ -20,5 +20,9 @@ module.exports = {
     EMPTY_QUEUE: function () {
         const error = ':no_entry_sign: There is nothing in the queue right now.'
         return { embeds: [getFailureEmbed(error)] }
+    },
+    NAN: function () {
+        const error = ':no_entry_sign: Please enter a valid number.'
+        return { embeds: [getFailureEmbed(error)] }
     }
 }

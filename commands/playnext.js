@@ -4,8 +4,8 @@ const { QueryType } = require('discord-player')
 module.exports = {
     // Prefix command
     cmd: {
-        name: 'play',
-        aliases: ['p'],
+        name: 'playnext',
+        aliases: ['pn'],
         inVoiceChannel: true,
         run: async (client, message, args) => {
             const query = args.join(' ')
@@ -39,16 +39,24 @@ module.exports = {
                 client.player.deleteQueue(message.guild.id)
                 return message.channel.send(client.errors.DEFAULT_ERROR(error))
             }
-            // Play the song
-            queue.addTrack(result.playlist ? result.tracks : result.tracks[0])
+            // Queue the song and play if necesary
+            if (result.playlist) {
+                // Reverse the playlist and add each song to the top individually
+                const tracks = result.tracks.reverse()
+                for (let i = 0; i < result.tracks.length; i++) {
+                    queue.insertTrack(tracks[i])
+                }
+            } else {
+                queue.insertTrack(result.tracks[0])
+            }
             if (!queue.node.isPlaying()) await queue.node.play()
         }
     },
     // Slash command
     s_cmd: {
         data: new SlashCommandBuilder()
-            .setName('play')
-            .setDescription('Play a song or playlists.')
+            .setName('playnext')
+            .setDescription('Add a song to the top of the queue.')
             .addStringOption(option => option.setName('song').setDescription('Song name or link').setRequired(true)),
         async execute({ client, interaction }) {
             await interaction.deferReply()
@@ -84,8 +92,16 @@ module.exports = {
                 client.player.deleteQueue(interaction.guildId)
                 return interaction.editReply(client.errors.DEFAULT_ERROR())
             }
-            // Play the song
-            queue.addTrack(result.playlist ? result.tracks : result.tracks[0])
+            // Queue the song and play if necesary
+            if (result.playlist) {
+                // Reverse the playlist and add each song to the top individually
+                const tracks = result.tracks.reverse()
+                for (let i = 0; i < result.tracks.length; i++) {
+                    queue.insertTrack(tracks[i])
+                }
+            } else {
+                queue.insertTrack(result.tracks[0])
+            }
             if (!queue.node.isPlaying()) await queue.node.play()
             await interaction.deleteReply()
         }
