@@ -72,7 +72,7 @@ function getErrorEmbed(title, message) {
     return embed
 }
 
-function getQueuedSongEmbed(song) {
+function getQueuedSongEmbed(queue, song) {
     let embed = new EmbedBuilder()
         .setColor(colors.actionSuccess)
         .setTitle('Queued')
@@ -80,11 +80,11 @@ function getQueuedSongEmbed(song) {
         .setThumbnail(song.thumbnail)
         .addFields({ name: ' ', value: `Artist: ${song.author}` })
         .addFields({ name: ' ', value: `Requested by: <@${song.requestedBy.id}>` })
-    // TODO: Add queue position
+        .setFooter({ text: `To position: ${queue.node.getTrackPosition(song) + 1}` })
     return embed
 }
 
-function getQueuedPlaylistEmbed(songs) {
+function getQueuedPlaylistEmbed(queue, songs) {
     const playlist = songs[0].playlist
     let embed = new EmbedBuilder()
         .setColor(colors.actionSuccess)
@@ -93,7 +93,7 @@ function getQueuedPlaylistEmbed(songs) {
         .setThumbnail(playlist.thumbnail.url ?? playlist.thumbnail)
         .addFields({ name: ' ', value: `Curator: ${playlist.author.name}` })
         .addFields({ name: ' ', value: `Requested by: <@${songs[0].requestedBy.id}>` })
-    // TODO: Add queue position
+        .setFooter({ text: `To position: ${queue.node.getTrackPosition(songs[0]) + 1}` })
     return embed
 }
 

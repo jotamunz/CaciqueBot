@@ -116,8 +116,10 @@ client.player.events
             .send({ embeds: [getPlayEmbed(queue, song)] })
             .then(message => (messages[`${queue.metadata.channel.guild.id}`] = message))
     })
-    .on('audioTrackAdd', (queue, song) => queue.metadata.channel.send({ embeds: [getQueuedSongEmbed(song)] }))
-    .on('audioTracksAdd', (queue, songs) => queue.metadata.channel.send({ embeds: [getQueuedPlaylistEmbed(songs)] }))
+    .on('audioTrackAdd', (queue, song) => queue.metadata.channel.send({ embeds: [getQueuedSongEmbed(queue, song)] }))
+    .on('audioTracksAdd', (queue, songs) =>
+        queue.metadata.channel.send({ embeds: [getQueuedPlaylistEmbed(queue, songs)] })
+    )
     .on('error', (queue, error) => {
         client.emit('trackEnd', queue.metadata.channel.guild.id)
         queue.metadata.channel.send(client.errors.DEFAULT_ERROR())
