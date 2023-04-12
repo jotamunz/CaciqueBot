@@ -34,6 +34,7 @@ module.exports = {
     cmd: {
         name: 'queue',
         aliases: ['q'],
+        inVoiceChannel: true,
         run: async (client, message) => {
             const queue = client.player.nodes.get(message.guild.id)
             if (!queue || !queue.tracks.toArray()[0]) return message.channel.send(client.errors.EMPTY_QUEUE())
