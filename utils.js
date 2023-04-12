@@ -129,6 +129,7 @@ module.exports = {
     getPlayEmbed: getPlayEmbed,
     getFailureEmbed: getFailureEmbed,
     getVolumeFormat: getVolumeFormat,
+    getRepeatModeFormat: getRepeatModeFormat,
     getSuccessEmbed: getSuccessEmbed,
     getErrorEmbed: getErrorEmbed,
     getQueuedSongEmbed: getQueuedSongEmbed,

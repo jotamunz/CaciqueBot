@@ -24,5 +24,13 @@ module.exports = {
     NAN: function () {
         const error = ':no_entry_sign: Please enter a valid number.'
         return { embeds: [getFailureEmbed(error)] }
+    },
+    NO_PREVIOUS: function () {
+        const error = ':no_entry_sign: There is no previous track.'
+        return { embeds: [getFailureEmbed(error)] }
+    },
+    INVALID_MODE: function () {
+        const error = ':no_entry_sign: Please use one of the following modes: `song` `queue` `off`'
+        return { embeds: [getFailureEmbed(error)] }
     }
 }
