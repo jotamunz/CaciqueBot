@@ -10,8 +10,7 @@ module.exports = {
         inVoiceChannel: true,
         run: async (client, message) => {
             const queue = client.player.nodes.get(message.guild.id)
-            if (!queue || !queue.node.isPlaying() || !queue.tracks.toArray()[0])
-                return message.channel.send(client.errors.EMPTY_QUEUE())
+            if (!queue || !queue.tracks.toArray()[0]) return message.channel.send(client.errors.EMPTY_QUEUE())
             await queue.tracks.shuffle()
             message.channel.send({ embeds: [getSuccessEmbed(successMsg)] })
         }
@@ -21,8 +20,7 @@ module.exports = {
         data: new SlashCommandBuilder().setName('shuffle').setDescription('Shuffles the queue.'),
         async execute({ client, interaction }) {
             const queue = client.player.nodes.get(interaction.guildId)
-            if (!queue || !queue.node.isPlaying() || !queue.tracks.toArray()[0])
-                return interaction.reply(client.errors.EMPTY_QUEUE())
+            if (!queue || !queue.tracks.toArray()[0]) return interaction.reply(client.errors.EMPTY_QUEUE())
             await queue.tracks.shuffle()
             interaction.reply({ embeds: [getSuccessEmbed(successMsg)] })
         }

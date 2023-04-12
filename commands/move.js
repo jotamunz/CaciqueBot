@@ -13,7 +13,7 @@ module.exports = {
         inVoiceChannel: true,
         run: async (client, message, args) => {
             const queue = client.player.nodes.get(message.guild.id)
-            if (!queue || !queue.node.isPlaying()) return message.channel.send(client.errors.EMPTY_QUEUE())
+            if (!queue) return message.channel.send(client.errors.EMPTY_QUEUE())
             const fromIndex = parseInt(args[0])
             if (isNaN(fromIndex) || fromIndex <= 0 || fromIndex > queue.tracks.toArray().length)
                 return message.channel.send(client.errors.NAN())
@@ -41,7 +41,7 @@ module.exports = {
         async execute({ client, interaction }) {
             // Check if a queue exists.
             const queue = client.player.nodes.get(interaction.guildId)
-            if (!queue || !queue.node.isPlaying()) return interaction.reply(client.errors.EMPTY_QUEUE())
+            if (!queue) return interaction.reply(client.errors.EMPTY_QUEUE())
             // Validate that a valid number has been input.
             const fromIndex = interaction.options.getNumber('current')
             const toIndex = interaction.options.getNumber('target')

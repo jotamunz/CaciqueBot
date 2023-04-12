@@ -36,8 +36,7 @@ module.exports = {
         aliases: ['q'],
         run: async (client, message) => {
             const queue = client.player.nodes.get(message.guild.id)
-            if (!queue || !queue.node.isPlaying() || !queue.tracks.toArray()[0])
-                return message.channel.send(client.errors.EMPTY_QUEUE())
+            if (!queue || !queue.tracks.toArray()[0]) return message.channel.send(client.errors.EMPTY_QUEUE())
             const pages = createPages(queue)
             if (pages.length > 1)
                 await pagination({
@@ -74,8 +73,7 @@ module.exports = {
             await interaction.deferReply()
             // Make sure there is an active queue with at least one next song
             const queue = client.player.nodes.get(interaction.guildId)
-            if (!queue || !queue.node.isPlaying() || !queue.tracks.toArray()[0])
-                return interaction.editReply(client.errors.EMPTY_QUEUE())
+            if (!queue || !queue.tracks.toArray()[0]) return interaction.editReply(client.errors.EMPTY_QUEUE())
             const pages = createPages(queue)
             if (pages.length > 1)
                 await pagination({

@@ -13,7 +13,7 @@ module.exports = {
         inVoiceChannel: true,
         run: async (client, message) => {
             const queue = client.player.nodes.get(message.guild.id)
-            if (!queue || !queue.node.isPlaying()) return message.channel.send(client.errors.EMPTY_QUEUE())
+            if (!queue) return message.channel.send(client.errors.EMPTY_QUEUE())
             const action =
                 queue.repeatMode === QueueRepeatMode.AUTOPLAY ? QueueRepeatMode.OFF : QueueRepeatMode.AUTOPLAY
             queue.setRepeatMode(action)
@@ -28,7 +28,7 @@ module.exports = {
             .setDescription('Enable or disable autoplay of similar songs.'),
         async execute({ client, interaction }) {
             const queue = client.player.nodes.get(interaction.guildId)
-            if (!queue || !queue.node.isPlaying()) return interaction.reply(client.errors.EMPTY_QUEUE())
+            if (!queue) return interaction.reply(client.errors.EMPTY_QUEUE())
             const action =
                 queue.repeatMode === QueueRepeatMode.AUTOPLAY ? QueueRepeatMode.OFF : QueueRepeatMode.AUTOPLAY
             queue.setRepeatMode(action)
