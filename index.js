@@ -57,22 +57,39 @@ fs.readdir('./commands/', (err, files) => {
 // Bot startup
 client.on('ready', () => {
     console.log(`${client.user.tag} is online.`)
-    // Get all ids of the servers
-    const guild_ids = client.guilds.cache.map(guild => guild.id)
-
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
-    for (const guildId of guild_ids) {
-        rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId), {
-            body: slash_commands
-        })
-            .then(() => console.log('Successfully updated commands for guild ' + guildId))
-            .catch(console.error)
-    }
+
+    // rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), { body: [] })
+    //     .then(() => console.log('Successfully deleted commands for guild ' + process.env.DEV_GUILD_ID))
+    //     .catch(console.error)
+    // rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: [] })
+    //     .then(() => console.log('Successfully deleted all application commands.'))
+    //     .catch(console.error)
+    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), {
+        body: slash_commands
+    })
+        .then(() => console.log('Successfully updated commands for guild ' + process.env.DEV_GUILD_ID))
+        .catch(console.error)
+    // rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID), {
+    //     body: slash_commands
+    // })
+    //     .then(() => console.log('Successfully updated all application commands.'))
+    //     .catch(console.error)
 
     // Set activity status
     client.user.setActivity(`${client.config.prefix}help`, {
         type: ActivityType.Listening
     })
+})
+
+// Register slash commands when bot joins a new guild
+client.on('guildCreate', async guild => {
+    const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
+    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, guild.id), {
+        body: slash_commands
+    })
+        .then(() => console.log('Successfully registered commands in guild ' + guild.id))
+        .catch(console.error)
 })
 
 // Handle prefix commands
