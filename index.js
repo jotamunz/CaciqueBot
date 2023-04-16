@@ -59,17 +59,24 @@ client.on('ready', () => {
     console.log(`${client.user.tag} is online.`)
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
 
+    // Delete command definitions in dev server
     // rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), { body: [] })
     //     .then(() => console.log('Successfully deleted commands for guild ' + process.env.DEV_GUILD_ID))
     //     .catch(console.error)
+
+    // Delete command definitions in all servers
     // rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: [] })
     //     .then(() => console.log('Successfully deleted all application commands.'))
     //     .catch(console.error)
-    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), {
-        body: slash_commands
-    })
-        .then(() => console.log('Successfully updated commands for guild ' + process.env.DEV_GUILD_ID))
-        .catch(console.error)
+
+    // Update command definitions in test server
+    // rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), {
+    //     body: slash_commands
+    // })
+    //     .then(() => console.log('Successfully updated commands for guild ' + process.env.DEV_GUILD_ID))
+    //     .catch(console.error)
+
+    // Update command definitions in all servers
     // rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID), {
     //     body: slash_commands
     // })
