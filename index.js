@@ -20,6 +20,7 @@ client.errors = require('./errors.js')
 client.player = new Player(client, {
     ytdlOptions: {
         quality: 'highestaudio',
+        smoothVolume: true,
         highWaterMark: 1 << 25
     }
 })
@@ -27,9 +28,6 @@ client.commands = new Discord.Collection()
 client.aliases = new Discord.Collection()
 client.slash_commands = new Discord.Collection()
 slash_commands = []
-
-// Temporary fix to prioritize a certain youtube downloader
-process.env.DP_FORCE_YTDL_MOD = '@distube/ytdl-core'
 
 // Load the list of commands
 fs.readdir('./commands/', (err, files) => {
@@ -69,7 +67,7 @@ client.on('ready', () => {
     //     .then(() => console.log('Successfully deleted all application commands.'))
     //     .catch(console.error)
 
-    // Update command definitions in test server
+    // Update command definitions in dev server
     // rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), {
     //     body: slash_commands
     // })
@@ -84,9 +82,16 @@ client.on('ready', () => {
     //     .catch(console.error)
 
     // Set activity status
-    client.user.setActivity(`${client.config.prefix}help`, {
-        type: ActivityType.Listening
-    })
+    const setActivity = () =>
+        client.user.setActivity(`${client.config.prefix}help`, {
+            type: ActivityType.Listening
+        })
+    setActivity()
+
+    // Refresh activity every hour
+    setInterval(function () {
+        setActivity()
+    }, 5 * 1000)
 })
 
 // Register slash commands when bot joins a new guild
@@ -158,6 +163,15 @@ client.player.events
         client.emit('trackEnd', queue.metadata.channel.guild.id)
         queue.metadata.channel.send({ embeds: [getErrorEmbed('Leaving...', 'Disconnected due to inactivity.')] })
     })
+// .on('debug', async (queue, message) => {
+//     // Emitted when the player queue sends debug info
+//     console.log(`Player debug event: ${message}`);
+// });
+
+// client.player.on('debug', async message => {
+//     // Emitted when the player sends debug info
+//     console.log(`Player debug event: ${message}`)
+// })
 
 client.on('trackEnd', (guildId = 0) => {
     if (messages[`${guildId}`]) {
