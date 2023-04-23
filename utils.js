@@ -85,6 +85,9 @@ function getQueuedSongEmbed(queue, song) {
 }
 
 function getQueuedPlaylistEmbed(queue, songs) {
+    /* TODO: The latest version of Discord-Player Extractors does not pass the playlist information in this event.
+    This has been fixed manually inside node modules, but the following line prevents the bot from breaking without the fix*/
+    if (!songs[0].playlist) return new EmbedBuilder().setTitle('Queued')
     const playlist = songs[0].playlist
     let embed = new EmbedBuilder()
         .setColor(colors.actionSuccess)
