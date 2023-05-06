@@ -15,9 +15,13 @@ const client = new Discord.Client({
 const fs = require('fs')
 const { getPlayEmbed, getErrorEmbed, getQueuedSongEmbed, getQueuedPlaylistEmbed } = require('./utils')
 
+// Temporary fix to prioritize a certain youtube downloader
+process.env.DP_FORCE_YTDL_MOD = '@distube/ytdl-core'
+
 client.config = require('./config.json')
 client.errors = require('./errors.js')
 client.player = new Player(client, {
+    autoRegisterExtractor: false,
     ytdlOptions: {
         quality: 'highestaudio',
         smoothVolume: true,
@@ -53,7 +57,8 @@ fs.readdir('./commands/', (err, files) => {
 })
 
 // Bot startup
-client.on('ready', () => {
+client.on('ready', async () => {
+    await client.player.extractors.loadDefault()
     console.log(`${client.user.tag} is online.`)
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
 
@@ -165,8 +170,8 @@ client.player.events
     })
 // .on('debug', async (queue, message) => {
 //     // Emitted when the player queue sends debug info
-//     console.log(`Player debug event: ${message}`);
-// });
+//     console.log(`Player debug event: ${message}`)
+// })
 
 // client.player.on('debug', async message => {
 //     // Emitted when the player sends debug info
