@@ -1,34 +1,37 @@
 {
     "name": "cacique-bot",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Discord music bot.",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js"
+        "start": "node index.js",
+        "develop": "nodemon index.js"
     },
     "repository": {
         "type": "git",
         "url": "git+ssh://github.com/jotamunz/CaciqueBot.git"
     },
     "author": "Andrés Cornejo & José Pablo Muñoz",
-    "license": "",
+    "license": "xd-license",
     "homepage": "https://github.com/jotamunz/CaciqueBot",
     "dependencies": {
-        "@devraelfreeze/discordjs-pagination": "^2.7.2",
-        "@discord-player/extractor": "^4.1.2",
+        "@devraelfreeze/discordjs-pagination": "^2.7.6",
+        "@discord-player/extractor": "^4.4.5",
         "@discordjs/opus": "^0.9.0",
-        "@discordjs/voice": "^0.15.0",
-        "@distube/ytdl-core": "^4.11.9",
+        "@discordjs/voice": "^0.16.1",
+        "@distube/ytdl-core": "^4.13.3",
         "@ffmpeg-installer/ffmpeg": "^1.1.0",
-        "discord-player": "^6.1.0",
-        "discord.js": "^14.8.0",
-        "dotenv": "^16.0.3",
+        "discord-player": "^6.7.1",
+        "discord-player-youtubei": "^1.3.2",
+        "discord.js": "^14.14.1",
+        "dotenv": "^16.3.1",
         "ffmpeg": "^0.0.4",
-        "play-dl": "^1.9.6",
-        "ytdl-core": "^4.11.4"
+        "play-dl": "^1.9.7",
+        "ytdl-core": "^4.11.5"
     },
     "devDependencies": {
-        "patch-package": "^6.5.1",
-        "prettier": "^2.8.4"
+        "nodemon": "^3.1.7",
+        "patch-package": "^8.0.0",
+        "prettier": "^3.1.1"
     }
 }
