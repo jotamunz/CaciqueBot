@@ -6,6 +6,7 @@ const { Routes } = require('discord-api-types/v10')
 const { YoutubeiExtractor } = require('discord-player-youtubei')
 const fs = require('fs')
 const { getPlayEmbed, getErrorEmbed, getQueuedSongEmbed, getQueuedPlaylistEmbed } = require('./utils')
+const logger = require('./logger')
 
 // Client setup
 const client = new Client({
@@ -61,14 +62,14 @@ function loadCommands() {
             client.slash_commands.set(s_cmd_alias.data.name, s_cmd_alias)
             slash_commands.push(s_cmd_alias.data.toJSON())
         }
-        console.log(`Loaded ${file}`)
+        logger.info(`Loaded ${file}`)
     }
 }
 
 // Bot startup
 client.once('ready', async () => {
     await player.extractors.loadDefault(ext => ext !== 'YouTubeExtractor')
-    console.log(`${client.user.tag} is online.`)
+    logger.info(`${client.user.tag} is online.`)
 
     setActivity()
     setInterval(setActivity, 5 * 60 * 1000) // Refresh activity every 5 minutes
@@ -90,9 +91,10 @@ client.on('guildCreate', async guild => {
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
     try {
         await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, guild.id), { body: slash_commands })
-        console.log('Successfully registered commands in guild ' + guild.id)
+        logger.info(`Successfully registered commands in guild ${guild.id}`)
     } catch (error) {
-        console.error(error)
+        logger.error(`Error registering commands in guild ${guild.name}`)
+        logger.debug(`Guild ID: ${guild.id}, Error: ${error}`)
     }
 })
 
@@ -115,7 +117,8 @@ client.on('messageCreate', async message => {
     try {
         await cmd.run(client, message, args)
     } catch (e) {
-        console.error(e)
+        logger.error('An unexpected error occurred while creating a message.')
+        logger.debug(e)
         message.channel.send(client.errors.DEFAULT_ERROR())
     }
 })
@@ -129,8 +132,9 @@ client.on('interactionCreate', async interaction => {
 
     try {
         await slash_command.execute({ client, interaction })
-    } catch (error) {
-        console.error(error)
+    } catch (e) {
+        logger.error('An unexpected error occurred while creating an interaction.')
+        logger.debug(e)
         await interaction.reply(client.errors.DEFAULT_ERROR())
     }
 })
@@ -159,7 +163,8 @@ client.player.events
 function handlePlayerError(queue, error) {
     client.emit('trackEnd', queue.metadata.channel.guild.id)
     queue.metadata.channel.send(client.errors.DEFAULT_ERROR())
-    console.error(error.message)
+    logger.error(error.message)
+    logger.debug(error)
 }
 
 client.on('trackEnd', (guildId = 0) => {
@@ -178,24 +183,24 @@ client.login(process.env.TOKEN)
 async function deleteCommandsInDevServer() {
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), { body: [] });
-    console.log('Successfully deleted commands for guild ' + process.env.DEV_GUILD_ID);
+    logger.info('Successfully deleted commands for guild ' + process.env.DEV_GUILD_ID);
 }
 
 async function deleteCommandsInAllServers() {
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: [] });
-    console.log('Successfully deleted all application commands.');
+    logger.info('Successfully deleted all application commands.');
 }
 
 async function updateCommandsInDevServer() {
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), { body: slash_commands });
-    console.log('Successfully updated commands for guild ' + process.env.DEV_GUILD_ID);
+    logger.info('Successfully updated commands for guild ' + process.env.DEV_GUILD_ID);
 }
 
 async function updateCommandsInAllServers() {
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: slash_commands });
-    console.log('Successfully updated all application commands.');
+    logger.info('Successfully updated all application commands.');
 }
 */
